@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>DEFCON — Attack. Defend. Dominate.</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@500;600;700&display=swap');
+*{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#07080b;color:#f2f1ee}
+body{font-family:'Oswald',sans-serif} .mono{font-family:'IBM Plex Mono',monospace}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;background:#07080b}
+.scene{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#07080b;opacity:0;clip-path:inset(0 0 0 0)}
+.scene:before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.025) 0 1px,transparent 1px 5px);opacity:.42;z-index:40}
+.scene:after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 32%,rgba(0,0,0,.44) 100%);z-index:39}
+.inner{position:relative;z-index:2;width:100%;height:100%;padding:74px 116px;display:flex;flex-direction:column}
+.eyebrow{font:600 21px 'IBM Plex Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#ff555b}
+.headline{font-size:108px;line-height:.92;font-weight:700;letter-spacing:-.035em;text-transform:uppercase;margin:0;color:#f2f1ee}
+.subhead{font-size:34px;line-height:1.25;font-weight:500;letter-spacing:.005em;color:#d6d5d2}
+.muted{color:#a8abb2}.red{color:#ff343b}.blue{color:#83a9e3}
+.rule{height:2px;background:linear-gradient(90deg,#e51b23,rgba(229,27,35,0));width:100%}
+.corner{position:absolute;width:36px;height:36px;border-color:#e51b23;opacity:.8;z-index:5}.tl{top:38px;left:40px;border-top:2px solid;border-left:2px solid}.tr{top:38px;right:40px;border-top:2px solid;border-right:2px solid}.bl{bottom:38px;left:40px;border-bottom:2px solid;border-left:2px solid}.br{bottom:38px;right:40px;border-bottom:2px solid;border-right:2px solid}
+.grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(74,88,111,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(74,88,111,.08) 1px,transparent 1px);background-size:80px 80px;mask-image:linear-gradient(to bottom,transparent,#000 16%,#000 84%,transparent)}
+.glow{position:absolute;width:760px;height:760px;border-radius:50%;filter:blur(70px);opacity:.16;pointer-events:none}
+.scanline{position:absolute;left:0;right:0;height:3px;top:0;background:#ef2630;opacity:.45;box-shadow:0 0 28px #e51b23}
+.label{font:500 18px 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#9fa5b0;text-transform:uppercase}
+/* Opening */
+#s1{z-index:1;opacity:1;background:radial-gradient(ellipse at 72% 48%,#291014 0%,#0d0b0f 36%,#07080b 72%)}
+#s1 .glow{right:130px;top:140px;background:#d90014}
+.opening-layout{height:100%;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:68px}
+#s1 .poster-frame{width:100%;height:184px;background:#030304;border:1px solid rgba(229,27,35,.5);display:flex;align-items:center;justify-content:center;box-shadow:0 0 50px rgba(220,10,28,.2);padding:30px}
+#s1 .poster-frame img{display:block;width:min(100%,640px);height:auto;object-fit:contain}
+#s1 .headline{font-size:184px;color:#efeeeb;margin:20px 0 24px}
+#s1 .status{display:inline-flex;align-items:center;gap:18px;border:1px solid #8d131a;background:rgba(98,5,12,.22);padding:16px 22px;color:#ff5358;font:600 22px 'IBM Plex Mono',monospace;letter-spacing:.09em}
+#s1 .status i{display:block;width:13px;height:13px;border-radius:50%;background:#ff3038;box-shadow:0 0 16px #ff3038}
+#s1 .tagline{font-size:38px;font-weight:600;line-height:1.15;letter-spacing:.02em;margin:27px 0;color:#e8e6e2}
+#s1 .small{font:500 18px 'IBM Plex Mono',monospace;line-height:1.7;color:#9297a1;letter-spacing:.07em}
+#s1 .side-mark{display:flex;justify-content:space-between;align-items:center;margin-top:42px;padding-top:22px;border-top:1px solid rgba(255,255,255,.13);color:#8e9299;font:500 16px 'IBM Plex Mono',monospace;letter-spacing:.13em}
+/* Operation room */
+#s2{z-index:2;background:radial-gradient(ellipse at 30% 65%,#171c25 0%,#0c0e13 44%,#07080b 82%)}
+#s2 .glow{left:80px;bottom:-280px;background:#284269;opacity:.22}
+.room{display:grid;grid-template-columns:1.03fr .97fr;align-items:center;gap:76px;height:100%}
+.operator-stage{height:716px;position:relative;border:1px solid #303644;background:linear-gradient(135deg,rgba(31,41,57,.48),rgba(8,9,13,.88));overflow:hidden;box-shadow:0 24px 90px rgba(0,0,0,.5)}
+.operator-stage:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 49.9%,rgba(148,166,198,.09) 50%,transparent 50.1%),linear-gradient(rgba(148,166,198,.07) 1px,transparent 1px);background-size:100% 100%,100% 78px}
+.monitor{position:absolute;top:90px;width:270px;height:230px;border:1px solid #48576d;background:#0c1118;box-shadow:0 0 30px rgba(59,108,171,.19)}
+.monitor.left{left:70px;transform:perspective(400px) rotateY(10deg)}.monitor.right{right:70px;transform:perspective(400px) rotateY(-10deg)}
+.monitor .mhead{height:33px;border-bottom:1px solid #263446;display:flex;align-items:center;padding:0 15px;color:#9bbce7;font:13px 'IBM Plex Mono',monospace;letter-spacing:.08em}
+.monitor .mcontent{padding:20px;font:13px/2 'IBM Plex Mono',monospace;color:#8b9baf}
+.monitor .trace{height:4px;margin:10px 0;background:linear-gradient(90deg,#8f1820 0 44%,#1d2633 44%)}
+.hood{position:absolute;left:50%;top:175px;width:280px;height:345px;transform:translateX(-50%);border-radius:48% 48% 34% 34%;background:linear-gradient(135deg,#202631,#080a0e 56%);clip-path:polygon(4% 25%,22% 3%,50% 0,78% 3%,96% 25%,86% 100%,14% 100%);box-shadow:0 0 60px rgba(17,27,43,.8)}
+.face{position:absolute;left:50%;top:261px;width:124px;height:142px;transform:translateX(-50%);border-radius:48% 48% 43% 43%;background:linear-gradient(135deg,#131821,#07090d);box-shadow:inset 0 12px 18px rgba(0,0,0,.7)}
+.face:after{content:'';position:absolute;left:14px;right:14px;top:47px;height:7px;background:#9e2830;box-shadow:0 0 18px #df1d29;opacity:.8}
+.shoulders{position:absolute;bottom:-55px;left:50%;transform:translateX(-50%);width:590px;height:300px;border-radius:50% 50% 0 0;background:linear-gradient(110deg,#141922,#060709 54%,#121721);border-top:2px solid #3a3033}
+.console{position:absolute;bottom:52px;left:85px;right:85px;height:110px;display:flex;align-items:center;justify-content:space-around;border-top:2px solid #9a252c;background:linear-gradient(180deg,rgba(30,34,43,.78),rgba(7,8,11,.95));color:#cc3940;font:15px 'IBM Plex Mono',monospace;letter-spacing:.08em}
+.console span{padding:15px 23px;border:1px solid #363e49}
+.room-copy .headline{font-size:99px;margin:20px 0 24px}.room-copy .subhead{max-width:720px;margin:0 0 34px}
+.motto{font:700 33px 'Oswald',sans-serif;letter-spacing:.04em;color:#f3f1ed;margin-top:38px}.motto em{font-style:normal;color:#ff3038}
+/* Attack / defend */
+#s3{z-index:3;background:#08090c}
+#s3 .inner{padding:68px 96px}
+.battle-heading{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:30px}
+.battle-heading .headline{font-size:70px}.battle-heading .label{padding-bottom:10px}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0}
+.battle{position:relative;padding:38px 48px 34px;overflow:hidden;border:1px solid #343941;background:#0c0f14}
+.battle.attack{border-color:#6d1c23;background:radial-gradient(ellipse at 78% 22%,rgba(108,12,23,.25),transparent 55%),#0c0d11}
+.battle.defend{border-color:#28466d;background:radial-gradient(ellipse at 75% 20%,rgba(34,75,126,.22),transparent 55%),#0c0f14}
+.battle .side-title{font-size:74px;line-height:1;margin:0 0 24px;letter-spacing:-.02em}
+.attack .side-title{color:#ff343b}.defend .side-title{color:#8aafe8}
+.battle ul{margin:0;padding:0;list-style:none;display:grid;gap:18px}
+.battle li{display:flex;align-items:center;gap:18px;font-size:31px;font-weight:500;line-height:1.12}
+.battle li i{width:11px;height:11px;display:block;transform:rotate(45deg);background:#e51b23;flex:none;box-shadow:0 0 15px currentColor}
+.defend li i{background:#719bdb}
+.network{position:absolute;right:42px;top:95px;width:400px;height:240px;opacity:.7}
+.network svg{width:100%;height:100%}
+.battle .label{position:absolute;bottom:24px;right:30px;font-size:14px;color:#777f8b}
+/* Dashboard */
+#s4{z-index:4;background:radial-gradient(ellipse at 60% 45%,#141922 0%,#090b10 62%,#07080b 100%)}
+#s4 .inner{padding:66px 104px}
+.dashboard-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px}
+.dashboard-head .headline{font-size:68px}.live{font:600 17px 'IBM Plex Mono',monospace;color:#ff5c62;letter-spacing:.14em;border:1px solid #68232a;padding:12px 18px}
+.dash-grid{display:grid;grid-template-columns:1.15fr .85fr;grid-template-rows:1fr 210px;gap:18px;flex:1;min-height:0}
+.terminal{border:1px solid #39414c;background:#0a0d12;padding:25px 29px;font:19px/1.8 'IBM Plex Mono',monospace;color:#c7cbd1;position:relative;overflow:hidden}
+.windowbar{display:flex;gap:9px;align-items:center;border-bottom:1px solid #303742;padding-bottom:15px;margin-bottom:13px;color:#9ea8b7;font-size:15px;letter-spacing:.12em}
+.windowbar b{width:10px;height:10px;border-radius:50%;background:#ad2630}.windowbar b:nth-child(2){background:#5e6775}.windowbar b:nth-child(3){background:#536c8c}
+.terminal .cmd{color:#ed6268}.terminal .ok{color:#a2c889}.terminal .cursor{display:inline-block;width:11px;height:21px;background:#e51b23;vertical-align:-4px;margin-left:5px}
+.scoreboard{border:1px solid #39414c;background:#10141b;padding:24px 28px;display:flex;flex-direction:column;justify-content:space-between}
+.scoreboard h3{font:600 20px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9ba4b1;margin:0}
+.scoreline{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #2b3038;font-size:25px}
+.scoreline:last-child{border-bottom:0}.scoreline strong{font:700 34px 'Oswald',sans-serif;color:#f5f2ee}.scoreline .plus{color:#a3d38a}.scoreline .minus{color:#ff6268}
+.feature{border:1px solid #343b46;background:linear-gradient(90deg,rgba(73,17,22,.27),rgba(14,17,22,.86));padding:27px 32px;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.feature .big{font-size:38px;font-weight:700;line-height:1.07;max-width:800px}.feature .label{max-width:350px;line-height:1.5;text-align:right}
+/* Prizes */
+#s5{z-index:5;background:radial-gradient(ellipse at 50% 60%,#301014 0%,#100c10 47%,#07080b 84%)}
+#s5 .glow{left:50%;top:220px;transform:translateX(-50%);background:#b20c1c;opacity:.13;width:1100px;height:560px}
+#s5 .inner{padding:68px 106px}
+.prize-head{text-align:center}.prize-head .headline{font-size:88px;margin:14px 0 10px}.prize-head .subhead{font-size:29px;margin:0}
+.prize-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:48px 0 24px;flex:1;align-items:center}
+.prize{height:300px;position:relative;display:flex;flex-direction:column;justify-content:center;padding:34px 39px;border:1px solid #753038;background:linear-gradient(145deg,rgba(35,18,23,.96),rgba(13,13,18,.96));box-shadow:0 18px 50px rgba(0,0,0,.38);overflow:hidden}
+.prize:before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:#ed2832;box-shadow:0 0 24px #ed2832}
+.prize .index{font:600 18px 'IBM Plex Mono',monospace;color:#ff676d;letter-spacing:.18em;margin-bottom:23px}
+.prize .name{font-size:56px;font-weight:700;line-height:1.02;letter-spacing:-.01em}
+.prize .type{font:500 17px 'IBM Plex Mono',monospace;color:#9da0a8;letter-spacing:.1em;margin-top:19px;text-transform:uppercase}
+#s5 .more{display:flex;align-items:center;justify-content:center;gap:18px;font:600 26px 'IBM Plex Mono',monospace;letter-spacing:.09em;color:#f3f1ed;margin:0 auto}
+#s5 .more i{width:10px;height:10px;border:2px solid #ff3841;transform:rotate(45deg)}
+/* Final */
+#s6{z-index:6;background:radial-gradient(ellipse at 50% 39%,#211015 0%,#0b0b10 46%,#07080b 83%)}
+#s6 .glow{top:80px;left:50%;transform:translateX(-50%);background:#a3111c;opacity:.2;width:980px;height:460px}
+#s6 .inner{padding:58px 100px 56px;align-items:center;text-align:center}
+#s6 .eyebrow{font-size:18px}
+#s6 .headline{font-size:98px;margin:11px 0 9px}
+#s6 .motto{font-size:34px;margin:0 0 14px}
+#s6 .subhead{font-size:24px;margin:0;color:#c8c7c3}
+.lockup{display:grid;grid-template-columns:1fr 440px;gap:48px;align-items:center;width:1190px;margin:46px auto 0}
+.logo-plate{height:165px;display:flex;align-items:center;justify-content:center;background:#f7f7f5;padding:18px 28px;box-shadow:0 0 40px rgba(0,0,0,.45)}
+.logo-plate img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+#s6 .poster-plate{background:#060609;border:1px solid rgba(255,255,255,.18)}#s6 .poster-plate img{width:min(100%,640px)}
+#s6 .affiliation{font:600 22px 'IBM Plex Mono',monospace;letter-spacing:.09em;line-height:1.45;margin-top:22px;color:#e4e1dc}
+#s6 .part{font:500 18px 'IBM Plex Mono',monospace;letter-spacing:.13em;margin-top:11px;color:#a9adb6}
+#s6 .part b{color:#e9e7e3;font-weight:600} #s6 .final-part{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:9px} .tz-mark{width:48px;height:48px;background:#f7f7f5;padding:3px;display:inline-flex;align-items:center;justify-content:center}.tz-mark img{width:100%;height:100%;object-fit:contain}
+#s6 .lower-line{width:660px;margin:22px auto 0}
+/* signal handoffs */
+.flash{position:absolute;inset:0;z-index:55;pointer-events:none;opacity:0;background:rgba(221,19,31,.25);transform:scaleX(0);transform-origin:left center}
+.flash:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 115px,rgba(245,245,245,.8) 116px 119px,transparent 120px 176px);opacity:.45}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="defcon-promo" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+  <section id="s1" class="scene"><div class="grid"></div><div class="glow"></div><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="inner opening-layout"><div class="left-open"><div class="eyebrow intro">NIT WARANGAL // TECHNOZION</div><h1 class="headline intro-title">DEFCON</h1><div class="status intro-status"><i></i><span>SYSTEM BREACH DETECTED</span></div><p class="tagline intro-tag">DEFCON IS HERE.</p><p class="small intro-copy">EVERY SYSTEM HAS A WEAKNESS.<br>FIND IT BEFORE THEY DO.</p><div class="side-mark intro-foot"><span>CAPTURE THE FLAG</span><span>45.000 SEC // LIVE</span></div></div><div class="right-open"><div class="poster-frame intro-poster"><img id="intro-poster-img" src="assets/defcon-poster.png" alt="DEFCON event poster mark" data-start="0" data-duration="4.72"></div><div class="label intro-serial" style="margin-top:24px">SECURE CHANNEL // 01</div><div class="rule" style="margin-top:17px"></div><p class="small" style="margin-top:20px">ATTACK&nbsp; / &nbsp;DEFEND&nbsp; / &nbsp;DOMINATE</p></div></div><span class="scanline" data-layout-ignore></span></section>
+  <section id="s2" class="scene"><div class="grid"></div><div class="glow"></div><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="inner room"><div class="operator-stage operator"><div class="monitor left"><div class="mhead">NODE / 01</div><div class="mcontent">AUTH CHANNEL: OPEN<div class="trace"></div>PACKET FLOW: LIVE<div class="trace" style="background:linear-gradient(90deg,#405e81 0 60%,#1d2633 60%)"></div>FIREWALL: ACTIVE</div></div><div class="monitor right"><div class="mhead">NODE / 02</div><div class="mcontent">SESSION: ENCRYPTED<div class="trace" style="background:linear-gradient(90deg,#405e81 0 35%,#1d2633 35%)"></div>THREATS: MONITORED<div class="trace"></div>ACCESS: RESTRICTED</div></div><div class="hood"></div><div class="face"></div><div class="shoulders" data-layout-allow-overflow></div><div class="console"><span>OPERATOR // ONLINE</span><span>NETWORK // MAPPED</span><span>DEFCON // ACTIVE</span></div></div><div class="room-copy"><div class="eyebrow room-kicker">01 — THE CHALLENGE</div><h2 class="headline room-title">ENTER<br>DEFCON</h2><p class="subhead room-sub">A Capture the Flag challenge where cybersecurity meets strategy, speed and skill.</p><div class="rule room-rule"></div><div class="motto room-motto">4 HOURS OF HIGH-STAKES CYBER WARFARE</div><div class="motto room-chant"><em>ATTACK</em> &nbsp;|&nbsp; DEFEND &nbsp;|&nbsp; DOMINATE</div></div></div></section>
+  <section id="s3" class="scene"><div class="grid"></div><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="inner"><div class="battle-heading"><div><div class="eyebrow battle-kicker">02 — THE BATTLE</div><h2 class="headline battle-title">TWO SIDES. ONE SYSTEM.</h2></div><div class="label battle-label">CHOOSE YOUR VECTOR</div></div><div class="panels"><article class="battle attack"><div class="network" data-layout-ignore><svg viewBox="0 0 400 240" fill="none"><circle cx="277" cy="116" r="78" stroke="#e51b23" stroke-opacity=".45"/><circle cx="277" cy="116" r="46" stroke="#e51b23" stroke-opacity=".55"/><circle cx="277" cy="116" r="12" fill="#e51b23"/><path d="M277 20v192M180 116h194M208 48l138 136M345 48L208 184" stroke="#b3353d" stroke-opacity=".45"/><path d="M46 172l56-61 44 19 64-77" stroke="#ff5158" stroke-width="3"/><circle cx="210" cy="53" r="6" fill="#ff6066"/></svg></div><div class="label">VECTOR / OFFENSE</div><h3 class="side-title attack-title">ATTACK</h3><ul><li class="atk-1"><i></i><span>Find vulnerabilities.</span></li><li class="atk-2"><i></i><span>Exploit weaknesses.</span></li><li class="atk-3"><i></i><span>Capture the flags.</span></li></ul></article><article class="battle defend"><div class="network" data-layout-ignore><svg viewBox="0 0 400 240" fill="none"><path d="M277 31l74 31v57c0 48-29 83-74 108-45-25-74-60-74-108V62l74-31Z" stroke="#82a9e1" stroke-opacity=".65" stroke-width="3"/><path d="M244 118l23 24 48-55" stroke="#9dc2f7" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="277" cy="116" r="106" stroke="#5579aa" stroke-opacity=".28"/><path d="M46 81h96m-96 38h63m-63 38h119" stroke="#729ad2" stroke-opacity=".5" stroke-width="3"/></svg></div><div class="label">VECTOR / DEFENSE</div><h3 class="side-title defend-title">DEFEND</h3><ul><li class="def-1"><i></i><span>Detect intrusions.</span></li><li class="def-2"><i></i><span>Evict attackers.</span></li><li class="def-3"><i></i><span>Patch vulnerabilities.</span></li></ul></article></div></div></section>
+  <section id="s4" class="scene"><div class="grid"></div><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="inner"><div class="dashboard-head"><div><div class="eyebrow dash-kicker">03 — THE ENVIRONMENT</div><h2 class="headline dash-title">TAKE CONTROL.</h2></div><div class="live">● &nbsp; LIVE SYSTEM ACTIVITY</div></div><div class="dash-grid"><div class="terminal dash-terminal"><div class="windowbar"><b></b><b></b><b></b><span style="margin-left:10px">LINUX // OBJECTIVE TERMINAL</span></div><div><span class="cmd">operator@defcon</span>:~$ access --environment</div><div>Linux environment access granted.</div><div><span class="cmd">operator@defcon</span>:~$ objective --status</div><div class="ok">OBJECTIVES AVAILABLE &nbsp; / &nbsp; SYSTEM ACTIVE</div><div><span class="cmd">operator@defcon</span>:~$ protect --system</div><div>Incoming attacks monitored. Defenses engaged.<span class="cursor"></span></div></div><div class="scoreboard dash-score"><h3>OBJECTIVE-BASED SCORING</h3><div class="scoreline"><span>Successful objectives</span><strong class="plus">POINTS +</strong></div><div class="scoreline"><span>Attacks against your system</span><strong class="minus">POINTS −</strong></div></div><div class="feature dash-feature"><div class="big">EARN POINTS.<br>PROTECT YOUR SYSTEM.</div><div class="label">FULL LINUX ENVIRONMENT ACCESS<br>REAL-TIME ATTACKS &amp; DEFENCE</div></div></div></div></section>
+  <section id="s5" class="scene"><div class="grid"></div><div class="glow"></div><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="inner"><div class="prize-head"><div class="eyebrow prize-kicker">04 — THE REWARD</div><h2 class="headline prize-title">EXCITING PRIZES AWAIT!</h2><p class="subhead prize-sub">Win premium subscriptions.</p></div><div class="prize-row"><article class="prize p1"><div class="index">REWARD / 01</div><div class="name">Claude<br>Max / Pro</div><div class="type">Premium subscription</div></article><article class="prize p2"><div class="index">REWARD / 02</div><div class="name">OpenAI<br>Codex</div><div class="type">Premium subscription</div></article><article class="prize p3"><div class="index">REWARD / 03</div><div class="name">GitHub<br>Copilot</div><div class="type">Premium subscription</div></article></div><div class="more prize-more"><i></i><span>AND MORE EXCLUSIVE SUBSCRIPTIONS</span><i></i></div></div></section>
+  <section id="s6" class="scene"><div class="grid"></div><div class="glow"></div><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="inner"><div class="eyebrow final-kicker">MISSION BRIEF // COMPLETE</div><h2 class="headline final-title">DEFCON</h2><div class="motto final-motto">ATTACK. DEFEND. DOMINATE.</div><p class="subhead final-sub">A Capture the Flag cybersecurity competition.</p><div class="rule lower-line"></div><div class="lockup"><div class="logo-plate poster-plate final-poster"><img id="final-poster-img" src="assets/defcon-poster.png" alt="DEFCON poster logo, shown unchanged" data-start="37.72" data-duration="7.28"></div><div class="logo-plate ham-plate final-ham"><img id="final-ham-img" src="assets/ham-arc-logo.jpg" alt="HAM ARC logo, shown unchanged" data-start="37.72" data-duration="7.28"></div></div><div class="affiliation final-aff">ORGANISED BY HAM ARC &nbsp;|&nbsp; NIT WARANGAL</div><div class="part final-part"><span>AS PART OF</span><span class="tz-mark"><img id="final-technozion-img" src="assets/technozion-logo.png" alt="Technozion mark, shown unchanged" data-start="37.72" data-duration="7.28"></span><b>TECHNOZION</b></div></div></section>
+  <audio id="film-audio" data-start="0" data-duration="45" data-track-index="10" data-volume="1" src="assets/final-mix.wav"></audio>
+  <div class="flash" id="f1" data-layout-ignore></div><div class="flash" id="f2" data-layout-ignore></div><div class="flash" id="f3" data-layout-ignore></div><div class="flash" id="f4" data-layout-ignore></div><div class="flash" id="f5" data-layout-ignore></div>
+</div>
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({paused:true});
+function handoff(selector, time, direction, flashId){
+  const from = direction==='right' ? 'inset(0 0 0 100%)' : direction==='bottom' ? 'inset(100% 0 0 0)' : 'inset(0 100% 0 0)';
+  tl.set(selector,{opacity:1,zIndex:20},time);
+  tl.from(selector,{clipPath:from,duration:.42,ease:'power4.inOut'},time);
+  tl.from(flashId,{opacity:.7,scaleX:1,duration:.07,ease:'steps(1)'},time+.03);
+  tl.to(flashId,{opacity:0,scaleX:0,duration:.18,ease:'power3.in'},time+.10);
+}
+// Opening logo strike and alert build
+ tl.from('.intro',{x:-54,opacity:0,duration:.55,ease:'power3.out'},.16);
+ tl.from('.intro-title',{y:58,opacity:0,skewX:-8,duration:.66,ease:'expo.out'},.27);
+ tl.from('.intro-status',{scaleX:.6,transformOrigin:'left center',opacity:0,duration:.34,ease:'back.out(2)'},.66);
+ tl.from('.intro-tag',{y:25,opacity:0,duration:.44,ease:'power2.out'},.9);
+ tl.from('.intro-copy',{y:18,opacity:0,duration:.4,ease:'power3.out'},1.07);
+ tl.from('.intro-foot',{y:18,opacity:0,duration:.45,ease:'power2.out'},1.23);
+ tl.from('.intro-poster',{scale:.82,opacity:0,filter:'brightness(3)',duration:.58,ease:'expo.out'},.48);
+ tl.from('.intro-serial',{x:34,opacity:0,duration:.35,ease:'power3.out'},.95);
+ tl.from('#s1 .rule',{scaleX:0,transformOrigin:'left center',duration:.38,ease:'power4.out'},1.12);
+ tl.from('#s1 .scanline',{y:1080,duration:1.3,ease:'power1.inOut'},.15);
+ // Scene 2 — operation room
+ handoff('#s2',4.72,'right','#f1');
+ tl.from('.operator',{x:-74,opacity:0,duration:.64,ease:'power3.out'},4.9);
+ tl.from('.room-kicker',{y:22,opacity:0,duration:.35,ease:'power2.out'},4.91);
+ tl.from('.room-title',{y:48,opacity:0,duration:.56,ease:'expo.out'},5.06);
+ tl.from('.room-sub',{x:35,opacity:0,duration:.5,ease:'power3.out'},5.34);
+ tl.from('.room-rule',{scaleX:0,transformOrigin:'left center',duration:.42,ease:'power4.out'},5.58);
+ tl.from('.room-motto',{y:25,opacity:0,duration:.44,ease:'power2.out'},5.72);
+ tl.from('.room-chant',{x:27,opacity:0,duration:.42,ease:'back.out(1.4)'},5.98);
+ // Scene 3 — split vectors
+ handoff('#s3',12.72,'bottom','#f2');
+ tl.from('.battle-kicker',{x:-24,opacity:0,duration:.38,ease:'power2.out'},12.91);
+ tl.from('.battle-title',{y:32,opacity:0,duration:.5,ease:'expo.out'},13.02);
+ tl.from('.battle-label',{x:34,opacity:0,duration:.35,ease:'power3.out'},13.12);
+ tl.from('.attack',{x:-42,opacity:0,duration:.5,ease:'power3.out'},13.08);
+ tl.from('.defend',{x:42,opacity:0,duration:.5,ease:'power2.out'},13.16);
+ tl.from('.attack-title',{scale:.82,opacity:0,duration:.42,ease:'back.out(1.7)'},13.37);
+ tl.from('.defend-title',{scale:.82,opacity:0,duration:.48,ease:'expo.out'},13.43);
+ tl.from(['.atk-1','.atk-2','.atk-3'],{x:-20,opacity:0,duration:.3,stagger:.14,ease:'power2.out'},13.65);
+ tl.from(['.def-1','.def-2','.def-3'],{x:22,opacity:0,duration:.32,stagger:.14,ease:'power3.out'},13.76);
+ // Scene 4 — competition dashboard
+ handoff('#s4',22.72,'right','#f3');
+ tl.from('.dash-kicker',{x:-25,opacity:0,duration:.35,ease:'power2.out'},22.91);
+ tl.from('.dash-title',{y:34,opacity:0,duration:.52,ease:'expo.out'},23.02);
+ tl.from('.live',{scale:.84,opacity:0,duration:.32,ease:'back.out(1.6)'},23.12);
+ tl.from('.dash-terminal',{y:30,opacity:0,duration:.45,ease:'power3.out'},23.21);
+ tl.from('.dash-score',{x:42,opacity:0,duration:.46,ease:'power2.out'},23.33);
+ tl.from('.dash-feature',{y:28,opacity:0,duration:.42,ease:'power3.out'},23.62);
+ // Scene 5 — reward reveal
+ handoff('#s5',30.72,'bottom','#f4');
+ tl.from('.prize-kicker',{y:20,opacity:0,duration:.34,ease:'power2.out'},30.92);
+ tl.from('.prize-title',{y:42,opacity:0,scale:.94,duration:.56,ease:'expo.out'},31.02);
+ tl.from('.prize-sub',{y:21,opacity:0,duration:.38,ease:'power3.out'},31.22);
+ tl.from('.p1',{y:66,rotation:-3,opacity:0,duration:.52,ease:'back.out(1.6)'},31.46);
+ tl.from('.p2',{y:76,opacity:0,duration:.58,ease:'expo.out'},31.58);
+ tl.from('.p3',{y:66,rotation:3,opacity:0,duration:.52,ease:'power3.out'},31.7);
+ tl.from('.prize-more',{y:25,opacity:0,duration:.44,ease:'power2.out'},32.12);
+ // Final affiliation and exact logo assets
+ handoff('#s6',37.72,'right','#f5');
+ tl.from('.final-kicker',{y:19,opacity:0,duration:.33,ease:'power2.out'},37.91);
+ tl.from('.final-title',{scale:.76,opacity:0,filter:'blur(10px)',duration:.72,ease:'expo.out'},38.02);
+ tl.from('.final-motto',{y:20,opacity:0,duration:.42,ease:'back.out(1.4)'},38.28);
+ tl.from('.final-sub',{y:18,opacity:0,duration:.36,ease:'power2.out'},38.47);
+ tl.from('.final-poster',{x:-40,scale:.9,opacity:0,duration:.56,ease:'power3.out'},38.78);
+ tl.from('.final-ham',{x:40,scale:.9,opacity:0,duration:.56,ease:'power2.out'},38.89);
+ tl.from('.final-aff',{y:22,opacity:0,duration:.4,ease:'expo.out'},39.16);
+ tl.from('.final-part',{y:15,opacity:0,duration:.36,ease:'power3.out'},39.38);
+ tl.from('.lower-line',{scaleX:0,transformOrigin:'center center',duration:.48,ease:'power3.out'},38.67);
+ tl.to('#s6',{opacity:0,duration:.32,ease:'power2.in'},44.68);
+window.__timelines['defcon-promo']=tl;
+</script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,5 @@
+Every system has a weakness. Every defence has a vulnerability. Do you have what it takes to find it?
+Enter DEFCON, a Capture the Flag challenge where cybersecurity meets strategy, speed and skill.
+Attack by discovering vulnerabilities and exploiting weaknesses. Defend by detecting intrusions, removing threats and securing your systems.
+Take control of a Linux environment. Complete objectives, earn points and protect your system from incoming attacks.
+Compete, dominate and take home exciting prizes, including premium subscriptions to Claude Max or Pro, OpenAI Codex, GitHub Copilot, and more exclusive subscriptions.
